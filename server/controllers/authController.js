@@ -2,6 +2,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 import User from '../models/User.js';
 import stateStore from '../utils/stateStore.js';
+import jwt from 'jsonwebtoken'; 
 
 
 export const githubLogin = (req, res) => {
@@ -77,14 +78,13 @@ export const githubCallback = async (req, res) => {
             }
         );
 
-        res.json({
-            message: 'OAuth successful',
-            user: {
-                id: user._id,        
-                username: user.username,
-                avatarUrl: user.avatarUrl
-            }
-        });
+        const jwtToken = jwt.sign(
+            {userId: user._id},
+            process.env.JWT_SECRET,
+            {expiresIn: '7d'}
+        );
+
+        res.redirect(`${process.env.CLIENT_URL}/auth/success?token=${jwtToken}`);
 
     } catch (error) {
         console.error('OAuth callback error: ', error.message);
