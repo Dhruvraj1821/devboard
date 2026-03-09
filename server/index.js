@@ -4,9 +4,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import connectDB from './config/db.js';
-import './models/User.js'
+import './models/User.js';
+import './models/GitHubStats.js';
 import authRouter from './routes/auth.js';
 import testRouter from './routes/test.js';
+import syncRouter from './routes/sync.js';
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.get('/health', (req,res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/test', testRouter);
+app.use('/api/sync', syncRouter);
 
 const PORT = process.env.PORT || 5000;
 
