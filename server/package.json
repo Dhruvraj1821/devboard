@@ -8,9 +8,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node --experimental-vm-modules ./node_modules/jest-cli/bin/jest.js"
   },
   "devDependencies": {
+    "jest": "^30.2.0",
     "nodemon": "^3.1.14"
   },
   "dependencies": {
@@ -24,5 +26,9 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.4",
     "morgan": "^1.10.1"
+  },
+  "jest": {
+    "transform": {},
+    "testMatch": ["**/utils/**/*.test.js"]
   }
 }
