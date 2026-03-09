@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import connectDB from './config/db.js';
 import './models/User.js'
 import authRouter from './routes/auth.js';
+import testRouter from './routes/test.js';
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.get('/health', (req,res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/test', testRouter);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
