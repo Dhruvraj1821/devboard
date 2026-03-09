@@ -1,6 +1,6 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
-import { fetchGitHubProfile, fetchRepos } from '../services/githubService.js';
+import { fetchGitHubProfile, fetchRepos, fetchContributions } from '../services/githubService.js';
 import User from '../models/User.js';
 
 const router = express.Router();
@@ -12,15 +12,22 @@ router.get('/github', authMiddleware, async (req, res) => {
 
         const accessToken = userWithToken.githubAccessToken;
 
-        const [profile, repos] = await Promise.all([
+        const [profile, repos, contributions] = await Promise.all([
             fetchGitHubProfile(accessToken),
-            fetchRepos(accessToken)
+            fetchRepos(accessToken),
+            fetchContributions(accessToken)
         ]);
 
         res.json({
             profile,
             repoCount: repos.length,
-            sampleRepos: repos.slice(0, 3)
+            contributions: {
+                totalCommits: contributions.totalCommits,
+                totalPRs: contributions.totalPRs,
+                totalIssues: contributions.totalIssues,
+                totalContributions: contributions.totalContributions,
+                sampleDays: contributions.contributionDays.slice(0, 7)
+            }
         });
 
     } catch (error) {

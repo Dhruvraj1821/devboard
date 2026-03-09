@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GraphQLClient, gql } from 'graphql-request';
 
 const githubAxios = (accessToken) => axios.create({
     baseURL: 'https://api.github.com',
@@ -70,5 +71,65 @@ export const fetchRepos = async (accessToken) => {
         }
 
         throw new Error (`Failed to fetch repos : ${error.message}`);
+    }
+}
+
+export const fetchContributions = async (accessToken) => {
+    try{
+        const client = new GraphQLClient('https://api.github.com/graphql', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'User-Agent': 'DevBoard'
+            }
+        });
+        const query = gql`
+            query {
+                viewer {
+                    contributionsCollection {
+                        totalCommitContributions
+                        totalPullRequestContributions
+                        totalIssueContributions
+                        contributionCalendar {
+                            totalContributions
+                            weeks {
+                                contributionDays {
+                                    contributionCount
+                                    date
+                                    weekday
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        `;
+
+        const data = await client.request(query);
+
+        const collection = data.viewer.contributionsCollection;
+
+        const contributionDays = collection.contributionCalendar.weeks
+            .flatMap(week => week.contributionDays)
+            .map(day => ({
+                date: day.date,
+                contributionCount:day.contributionCount,
+                weekday: day.weekday
+            }));
+
+            return{
+                totalCommits: collection.totalCommitContributions,
+                totalPRs: collection.totalPullRequestContributions,
+                totalIssues: collection.totalIssueContributions,
+                totalContributions: collection.contributionCalendar.totalContributions,
+                contributionDays
+            }
+    } catch (error) {
+        if (error.response?.status === 401) {
+            throw new Error('GITHUB_TOKEN_REVOKED');
+        }
+        if (error.response?.status === 403) {
+            throw new Error('GITHUB_RATE_LIMITED');
+        }
+        throw new Error(`Failed to fetch contributions: ${error.message}`);
     }
 }
