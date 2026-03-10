@@ -8,7 +8,9 @@ import './models/User.js';
 import './models/GitHubStats.js';
 import authRouter from './routes/auth.js';
 import testRouter from './routes/test.js';
+import statsRouter from './routes/stats.js';
 import syncRouter from './routes/sync.js';
+
 import { initCronJobs } from './jobs/syncJob.js';
 
 const app = express();
@@ -33,6 +35,7 @@ app.get('/health', (req,res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/test', testRouter);
 app.use('/api/sync', syncRouter);
+app.use('/api/stats', statsRouter);
 
 const PORT = process.env.PORT || 5000;
 
