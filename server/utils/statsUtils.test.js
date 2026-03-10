@@ -1,5 +1,6 @@
 import { calculateStreak, calculateLanguageStats, calculateTotalStars } from './statsUtils.js';
-
+import { withRetry } from './retryUtils.js';
+import { jest } from '@jest/globals';
 // --- calculateStreak tests ---
 
 describe('calculateStreak', () => {
@@ -124,5 +125,52 @@ describe('calculateTotalStars', () => {
             { stars: 3 },
         ];
         expect(calculateTotalStars(repos)).toBe(18);
+    });
+});
+
+describe('withRetry', () => {
+
+    test('returns result on first success', async () => {
+        const fn = jest.fn().mockResolvedValue('success');
+        const result = await withRetry(fn);
+        expect(result).toBe('success');
+        expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    test('retries on transient error and succeeds', async () => {
+        const fn = jest.fn()
+            // First call fails with transient error
+            .mockRejectedValueOnce(new Error('Network timeout'))
+            // Second call succeeds
+            .mockResolvedValueOnce('success');
+
+        // Use baseDelay of 0 for tests — don't actually wait 2 seconds
+        const result = await withRetry(fn, 2, 0);
+        expect(result).toBe('success');
+        expect(fn).toHaveBeenCalledTimes(2);
+    });
+
+    test('does not retry permanent errors', async () => {
+        const fn = jest.fn()
+            .mockRejectedValue(new Error('GITHUB_TOKEN_REVOKED'));
+
+        await expect(withRetry(fn, 2, 0))
+            .rejects
+            .toThrow('GITHUB_TOKEN_REVOKED');
+
+        // Should only have been called once — no retries
+        expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    test('throws after exhausting all retries', async () => {
+        const fn = jest.fn()
+            .mockRejectedValue(new Error('Network timeout'));
+
+        await expect(withRetry(fn, 2, 0))
+            .rejects
+            .toThrow('Network timeout');
+
+        // 1 initial attempt + 2 retries = 3 total calls
+        expect(fn).toHaveBeenCalledTimes(3);
     });
 });
