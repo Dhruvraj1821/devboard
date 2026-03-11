@@ -106,29 +106,60 @@ export const getRepos = async (req, res) => {
 
 export const getTrends = async (req, res) => {
     try {
-        
         const period = parseInt(req.query.period) || 30;
 
-        const stats = await GitHubStats.findOne({ user: req.user._id })
-            .select('commitHistory');
-
-        if (!stats) {
-            return res.status(404).json({
-                error: 'Stats not yet synced — please sync first'
-            });
-        }
-
-  
+       
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - period);
-        const cutoffString = cutoffDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        const cutoffString = cutoffDate.toISOString().split('T')[0];
 
+        const result = await GitHubStats.aggregate([
 
-        const filtered = stats.commitHistory
-            .filter(day => day.date >= cutoffString)
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
+            {
+                $match: { user: req.user._id }
+            },
 
-        res.json(filtered);
+            {
+                $project: { commitHistory: 1 }
+            },
+
+            {
+                $unwind: '$commitHistory'
+            },
+
+            {
+                $match: {
+                    'commitHistory.date': { $gte: cutoffString }
+                }
+            },
+
+            {
+                $group: period <= 30
+                    ? {
+                        _id: '$commitHistory.date',
+                        count: { $sum: '$commitHistory.count' }
+                    }
+                    : {
+                        // $substr: [string, startIndex, length]
+                        _id: { $substr: ['$commitHistory.date', 0, 7] },
+                        count: { $sum: '$commitHistory.count' }
+                    }
+            },
+
+            {
+                $sort: { _id: 1 }
+            },
+
+            {
+                $project: {
+                    _id: 0,          
+                    date: '$_id',    
+                    count: 1         
+                }
+            }
+        ]);
+
+        res.json(result);
 
     } catch (error) {
         console.error('getTrends error:', error.message);
