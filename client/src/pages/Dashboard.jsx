@@ -5,6 +5,7 @@ import ContributionHeatmap from '../components/ContributionHeatmap.jsx'
 import StatsOverview from '../components/StatsOverview.jsx'
 import LanguagePieChart from '../components/LanguagePieChart.jsx'
 import CommitTrendChart from '../components/CommitTrendChart.jsx'
+import TopRepos from '../components/TopRepos.jsx'
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
@@ -161,7 +162,8 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <LanguagePieChart />
           <CommitTrendChart />
-      </div>
+        </div>
+        <TopRepos />
       </main>
 
       {/* Footer */}
