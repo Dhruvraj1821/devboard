@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'react-calendar-heatmap/dist/styles.css';
 
 @theme {
   --color-contrib-empty: #161b22;
@@ -6,4 +7,21 @@
   --color-contrib-mid: #006d32;
   --color-contrib-high: #26a641;
   --color-contrib-max: #39d353;
+}
+
+/* Override react-calendar-heatmap default colors */
+.react-calendar-heatmap .color-empty { fill: #161b22; }
+.react-calendar-heatmap .color-low   { fill: #0e4429; }
+.react-calendar-heatmap .color-mid   { fill: #006d32; }
+.react-calendar-heatmap .color-high  { fill: #26a641; }
+.react-calendar-heatmap .color-max   { fill: #39d353; }
+
+.react-calendar-heatmap text {
+    fill: #6b7280;
+    font-size: 8px;
+}
+
+.react-calendar-heatmap rect:hover {
+    stroke: #58a6ff;
+    stroke-width: 1px;
 }
