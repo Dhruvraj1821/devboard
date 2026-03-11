@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../api/axiosInstance.js'
 import ContributionHeatmap from '../components/ContributionHeatmap.jsx'
+import StatsOverview from '../components/StatsOverview.jsx'
+import LanguagePieChart from '../components/LanguagePieChart.jsx'
+import CommitTrendChart from '../components/CommitTrendChart.jsx'
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
@@ -151,8 +154,14 @@ export default function Dashboard() {
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-8 py-8 space-y-6">
+        <StatsOverview />
         <ContributionHeatmap />
-        {/* Steps 20-21 components coming soon */}
+
+    {/* Two column layout for language + trend */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LanguagePieChart />
+          <CommitTrendChart />
+      </div>
       </main>
 
       {/* Footer */}
