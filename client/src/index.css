@@ -2,26 +2,55 @@
 @import 'react-calendar-heatmap/dist/styles.css';
 
 @theme {
-  --color-contrib-empty: #161b22;
-  --color-contrib-low: #0e4429;
-  --color-contrib-mid: #006d32;
-  --color-contrib-high: #26a641;
-  --color-contrib-max: #39d353;
+  --color-base: #0d0d0d;
+  --color-surface: #141414;
+  --color-surface-2: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-accent: #FFE500;
+  --color-accent-hover: #FFD000;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #888888;
+  --color-text-muted: #444444;
+  --color-danger: #FF3131;
+  --color-success: #00FF94;
 }
 
-/* Override react-calendar-heatmap default colors */
-.react-calendar-heatmap .color-empty { fill: #161b22; }
-.react-calendar-heatmap .color-low   { fill: #0e4429; }
-.react-calendar-heatmap .color-mid   { fill: #006d32; }
-.react-calendar-heatmap .color-high  { fill: #26a641; }
-.react-calendar-heatmap .color-max   { fill: #39d353; }
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0d0d0d;
+  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+}
+
+/* Heatmap */
+.react-calendar-heatmap .color-empty { fill: #1a1a1a; }
+.react-calendar-heatmap .color-low   { fill: #3d3500; }
+.react-calendar-heatmap .color-mid   { fill: #7a6b00; }
+.react-calendar-heatmap .color-high  { fill: #ccb800; }
+.react-calendar-heatmap .color-max   { fill: #FFE500; }
 
 .react-calendar-heatmap text {
-    fill: #6b7280;
+    fill: #444444;
     font-size: 8px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
 .react-calendar-heatmap rect:hover {
-    stroke: #58a6ff;
-    stroke-width: 1px;
+    stroke: #FFE500;
+    stroke-width: 1.5px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0d0d0d; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; }
+::-webkit-scrollbar-thumb:hover { background: #FFE500; }
+
+/* Number styling — monospace for all stats */
+.stat-number {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }

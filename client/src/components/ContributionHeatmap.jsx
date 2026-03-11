@@ -11,58 +11,27 @@ export default function ContributionHeatmap() {
     useEffect(() => {
         axiosInstance.get('/api/stats/calendar')
             .then(res => {
-                // res.data is array of { date, contributionCount, weekday }
-                // react-calendar-heatmap expects { date, count }
                 const transformed = res.data.map(day => ({
                     date: day.date,
                     count: day.contributionCount
                 }))
-
-                // Calculate total contributions for the header
                 const total = res.data.reduce(
                     (sum, day) => sum + day.contributionCount, 0
                 )
-
                 setCalendarData(transformed)
                 setTotalContributions(total)
                 setLoading(false)
             })
-            .catch(err => {
+            .catch(() => {
                 setError('Failed to load contribution data')
                 setLoading(false)
             })
-    }, []) // empty array — fetch once when component mounts
+    }, [])
 
-   
-    if (loading) {
-        return (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                <div className="h-32 bg-gray-800 rounded animate-pulse" />
-            </div>
-        )
-    }
-
-    
-    if (error) {
-        return (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                <p className="text-red-400 text-sm">{error}</p>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="mt-2 text-green-400 text-sm hover:underline"
-                >
-                    Retry
-                </button>
-            </div>
-        )
-    }
-
-   
     const endDate = new Date()
     const startDate = new Date()
     startDate.setFullYear(startDate.getFullYear() - 1)
 
-    
     const getColorClass = (value) => {
         if (!value || value.count === 0) return 'color-empty'
         if (value.count <= 2) return 'color-low'
@@ -71,15 +40,66 @@ export default function ContributionHeatmap() {
         return 'color-max'
     }
 
+    if (loading) {
+        return (
+            <div className="border p-6"
+                style={{ backgroundColor: '#141414', borderColor: '#2a2a2a' }}>
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 animate-pulse"
+                        style={{ backgroundColor: '#FFE500' }} />
+                    <span className="font-mono text-xs uppercase tracking-widest"
+                        style={{ color: '#444444' }}>
+                        Loading Activity...
+                    </span>
+                </div>
+                <div className="h-32 animate-pulse"
+                    style={{ backgroundColor: '#1a1a1a' }} />
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="border p-6"
+                style={{ backgroundColor: '#141414', borderColor: '#FF3131' }}>
+                <p className="font-mono text-xs uppercase"
+                    style={{ color: '#FF3131' }}>
+                    ✕ {error}
+                </p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-3 font-mono text-xs uppercase tracking-widest border px-3 py-1 transition-colors"
+                    style={{ borderColor: '#2a2a2a', color: '#888888' }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = '#FFE500'}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = '#2a2a2a'}
+                >
+                    [ RETRY ]
+                </button>
+            </div>
+        )
+    }
+
     return (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="border p-6"
+            style={{ backgroundColor: '#141414', borderColor: '#2a2a2a' }}>
+
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-white font-semibold">
-                    Contribution Activity
-                </h2>
-                <span className="text-gray-400 text-sm">
-                    {totalContributions} contributions in the last year
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-2 h-2"
+                        style={{ backgroundColor: '#FFE500' }} />
+                    <span className="font-mono text-xs uppercase tracking-widest font-bold"
+                        style={{ color: '#FFFFFF' }}>
+                        Contribution Activity
+                    </span>
+                </div>
+                <span className="stat-number text-2xl font-black"
+                    style={{ color: '#FFE500' }}>
+                    {totalContributions.toLocaleString()}
+                    <span className="font-mono text-xs ml-2 font-normal"
+                        style={{ color: '#444444' }}>
+                        CONTRIBUTIONS
+                    </span>
                 </span>
             </div>
 
@@ -98,14 +118,21 @@ export default function ContributionHeatmap() {
             />
 
             {/* Legend */}
-            <div className="flex items-center gap-1 mt-3 justify-end">
-                <span className="text-gray-500 text-xs mr-1">Less</span>
-                <div className="w-3 h-3 rounded-sm bg-gray-800" />
-                <div className="w-3 h-3 rounded-sm" style={{backgroundColor: '#0e4429'}} />
-                <div className="w-3 h-3 rounded-sm" style={{backgroundColor: '#006d32'}} />
-                <div className="w-3 h-3 rounded-sm" style={{backgroundColor: '#26a641'}} />
-                <div className="w-3 h-3 rounded-sm" style={{backgroundColor: '#39d353'}} />
-                <span className="text-gray-500 text-xs ml-1">More</span>
+            <div className="flex items-center gap-2 mt-4 justify-between">
+                <span className="font-mono text-xs uppercase"
+                    style={{ color: '#2a2a2a' }}>
+                    {new Date(startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase()}
+                    {' → '}
+                    {new Date(endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase()}
+                </span>
+                <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs" style={{ color: '#444444' }}>LESS</span>
+                    {['#1a1a1a', '#3d3500', '#7a6b00', '#ccb800', '#FFE500'].map(color => (
+                        <div key={color} className="w-3 h-3"
+                            style={{ backgroundColor: color }} />
+                    ))}
+                    <span className="font-mono text-xs" style={{ color: '#444444' }}>MORE</span>
+                </div>
             </div>
         </div>
     )
