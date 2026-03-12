@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import CalendarHeatmap from 'react-calendar-heatmap'
 import axiosInstance from '../api/axiosInstance.js'
 
-export default function ContributionHeatmap() {
+export default function ContributionHeatmap({refreshKey}) {
     const [calendarData, setCalendarData] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -26,7 +26,7 @@ export default function ContributionHeatmap() {
                 setError('Failed to load contribution data')
                 setLoading(false)
             })
-    }, [])
+    }, [refreshKey])
 
     const endDate = new Date()
     const startDate = new Date()

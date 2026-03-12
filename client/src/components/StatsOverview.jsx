@@ -31,7 +31,7 @@ const StatCard = ({ label, value, unit, accent }) => (
     </div>
 )
 
-export default function StatsOverview() {
+export default function StatsOverview({refreshKey}) {
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -46,7 +46,7 @@ export default function StatsOverview() {
                 setError('Failed to load stats')
                 setLoading(false)
             })
-    }, [])
+    }, [refreshKey])
 
     if (loading) {
         return (

@@ -156,15 +156,15 @@ export default function Dashboard() {
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-8 py-8 space-y-6">
-        <StatsOverview key={refreshKey}/>
-        <ContributionHeatmap key={refreshKey}/>
+        <StatsOverview refreshKey={refreshKey}/>
+        <ContributionHeatmap refreshKey={refreshKey}/>
 
     {/* Two column layout for language + trend */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <LanguagePieChart key={refreshKey}/>
-          <CommitTrendChart key={refreshKey}/>
+          <LanguagePieChart refreshKey={refreshKey}/>
+          <CommitTrendChart refreshKey={refreshKey}/>
         </div>
-        <TopRepos key={refreshKey}/>
+        <TopRepos refreshKey={refreshKey}/>
       </main>
 
       {/* Footer */}

@@ -28,7 +28,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return null
 }
 
-export default function CommitTrendChart() {
+export default function CommitTrendChart({refreshKey}) {
     const [trends, setTrends] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -54,7 +54,7 @@ export default function CommitTrendChart() {
                 setError('Failed to load trend data')
                 setLoading(false)
             })
-    }, [period]) // re-fetch when period changes
+    }, [period, refreshKey]) // re-fetch when period changes
 
     if (loading) {
         return (

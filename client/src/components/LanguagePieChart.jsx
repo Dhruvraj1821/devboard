@@ -27,7 +27,7 @@ const CustomTooltip = ({ active, payload }) => {
     return null
 }
 
-export default function LanguagePieChart() {
+export default function LanguagePieChart({refreshKey}) {
     const [languages, setLanguages] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -42,7 +42,7 @@ export default function LanguagePieChart() {
                 setError('Failed to load language stats')
                 setLoading(false)
             })
-    }, [])
+    }, [refreshKey])
 
     if (loading) {
         return (

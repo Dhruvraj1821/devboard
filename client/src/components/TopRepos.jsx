@@ -74,7 +74,7 @@ const RepoCard = ({ repo }) => (
     </a>
 )
 
-export default function TopRepos() {
+export default function TopRepos({refreshKey}) {
     const [repos, setRepos] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -94,7 +94,7 @@ export default function TopRepos() {
                 setError('Failed to load repositories')
                 setLoading(false)
             })
-    }, [])
+    }, [refreshKey])
 
     // Extract unique languages from all repos for the filter dropdown
     // useMemo — only recomputes when repos changes, not on every render
