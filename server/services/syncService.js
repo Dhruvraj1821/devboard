@@ -58,10 +58,13 @@ export const syncUserStats = async (userId) => {
         }
     },
     {
-        upsert: true,
-        returnDocument: 'after'
+            upsert: true,
+            returnDocument: 'after'
     }
 );
+    console.log('languageStats length:', languageStats.length)
+    console.log('contributionDays length:', contributions.contributionDays.length)
+    console.log('commitHistory length:', commitHistory.length)
 
     
     await User.findByIdAndUpdate(userId, {
