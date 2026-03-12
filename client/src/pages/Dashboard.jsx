@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null)
   const [syncing, setSyncing] = useState(false)
   const navigate = useNavigate()
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     axiosInstance.get('/api/auth/me')
@@ -27,7 +28,7 @@ export default function Dashboard() {
     setSyncing(true)
     try {
       await axiosInstance.post('/api/sync')
-      window.location.reload()
+      setRefreshKey(prev => prev + 1)
     } catch (error) {
       alert('Sync failed')
     } finally {
@@ -155,15 +156,15 @@ export default function Dashboard() {
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-8 py-8 space-y-6">
-        <StatsOverview />
-        <ContributionHeatmap />
+        <StatsOverview key={refreshKey}/>
+        <ContributionHeatmap key={refreshKey}/>
 
     {/* Two column layout for language + trend */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <LanguagePieChart />
-          <CommitTrendChart />
+          <LanguagePieChart key={refreshKey}/>
+          <CommitTrendChart key={refreshKey}/>
         </div>
-        <TopRepos />
+        <TopRepos key={refreshKey}/>
       </main>
 
       {/* Footer */}
