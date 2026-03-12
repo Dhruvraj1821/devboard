@@ -1,7 +1,7 @@
 export default function LandingPage() {
   const handleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/github'
-  }
+    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/github`
+}
 
   return (
     <div className="min-h-screen flex flex-col"
