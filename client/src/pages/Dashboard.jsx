@@ -76,79 +76,68 @@ export default function Dashboard() {
     <div className="min-h-screen" style={{ backgroundColor: '#0d0d0d', color: '#FFFFFF' }}>
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b sticky top-0 z-10"
-        style={{
-          borderColor: '#2a2a2a',
-          backgroundColor: '#0d0d0d'
-        }}>
+      <nav className="flex items-center justify-between px-4 py-3 border-b sticky top-0 z-10"
+    style={{ borderColor: '#2a2a2a', backgroundColor: '#0d0d0d' }}>
 
-        <span className="font-black text-lg tracking-tighter">
-          DEV<span style={{ color: '#FFE500' }}>BOARD</span>
-        </span>
+    <span className="font-black text-lg tracking-tighter">
+        DEV<span style={{ color: '#FFE500' }}>BOARD</span>
+    </span>
 
-        <div className="flex items-center gap-4">
-          {/* User info */}
-          <div className="flex items-center gap-2 border px-3 py-1.5"
-            style={{ borderColor: '#2a2a2a' }}>
-            <img
-              src={user.avatarUrl}
-              alt={user.username}
-              className="w-5 h-5"
-            />
-            <span className="font-mono text-xs uppercase tracking-wider"
-              style={{ color: '#888888' }}>
-              {user.username}
-            </span>
-          </div>
+    <div className="flex items-center gap-2">
+        {/* Avatar only — no username text on mobile */}
+        <img
+            src={user.avatarUrl}
+            alt={user.username}
+            className="w-6 h-6 border"
+            style={{ borderColor: '#2a2a2a' }}
+        />
 
-          {/* Sync button */}
-          <button
+        <button
             onClick={handleSync}
             disabled={syncing}
-            className="px-4 py-1.5 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-150 disabled:opacity-40"
+            className="px-3 py-1.5 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-150 disabled:opacity-40"
             style={{
-              backgroundColor: syncing ? '#1a1a1a' : '#FFE500',
-              color: syncing ? '#888888' : '#0d0d0d',
-              border: `2px solid ${syncing ? '#2a2a2a' : '#FFE500'}`
+                backgroundColor: syncing ? '#1a1a1a' : '#FFE500',
+                color: syncing ? '#888888' : '#0d0d0d',
+                border: `2px solid ${syncing ? '#2a2a2a' : '#FFE500'}`
             }}
             onMouseEnter={e => {
-              if (!syncing) {
-                e.currentTarget.style.backgroundColor = '#0d0d0d'
-                e.currentTarget.style.color = '#FFE500'
-              }
+                if (!syncing) {
+                    e.currentTarget.style.backgroundColor = '#0d0d0d'
+                    e.currentTarget.style.color = '#FFE500'
+                }
             }}
             onMouseLeave={e => {
-              if (!syncing) {
-                e.currentTarget.style.backgroundColor = '#FFE500'
-                e.currentTarget.style.color = '#0d0d0d'
-              }
+                if (!syncing) {
+                    e.currentTarget.style.backgroundColor = '#FFE500'
+                    e.currentTarget.style.color = '#0d0d0d'
+                }
             }}
-          >
-            {syncing ? '[ SYNCING... ]' : '[ SYNC ]'}
-          </button>
+        >
+            {syncing ? 'SYNCING...' : 'SYNC'}
+        </button>
 
-          {/* Logout */}
-          <button
+        <button
             onClick={handleLogout}
-            className="px-4 py-1.5 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-150 border"
+            className="px-3 py-1.5 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-150 border"
             style={{
-              backgroundColor: 'transparent',
-              color: '#444444',
-              borderColor: '#2a2a2a'
+                backgroundColor: 'transparent',
+                color: '#444444',
+                borderColor: '#2a2a2a'
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = '#FF3131'
-              e.currentTarget.style.color = '#FF3131'
+                e.currentTarget.style.borderColor = '#FF3131'
+                e.currentTarget.style.color = '#FF3131'
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.borderColor = '#2a2a2a'
-              e.currentTarget.style.color = '#444444'
+                e.currentTarget.style.borderColor = '#2a2a2a'
+                e.currentTarget.style.color = '#444444'
             }}
-          >
-            [ EXIT ]
-          </button>
-        </div>
-      </nav>
+        >
+            EXIT
+        </button>
+    </div>
+</nav>
 
       {/* Page header */}
       <div className="px-8 py-6 border-b"

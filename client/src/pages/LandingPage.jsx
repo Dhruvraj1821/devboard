@@ -54,8 +54,8 @@ export default function LandingPage() {
           <span style={{ color: '#FFE500' }}>LAID</span>
           <br />
           <span style={{
-            WebkitTextStroke: '2px #FFE500',
-            color: 'transparent'
+            color: '#FFE500',
+            opacity: 0.4
           }}>
             BARE.
           </span>
