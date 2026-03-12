@@ -84,7 +84,7 @@ export const githubCallback = async (req, res) => {
             {expiresIn: '7d'}
         );
 
-        res.redirect(`${process.env.CLIENT_URL}/#token=${token}`)
+        res.redirect(`${process.env.CLIENT_URL}/#token=${jwtToken}`)
 
     } catch (error) {
         console.error('OAuth callback error: ', error.message);
