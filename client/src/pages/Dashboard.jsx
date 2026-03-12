@@ -16,17 +16,20 @@ export default function Dashboard() {
   useEffect(() => {
     axiosInstance.get('/api/auth/me')
         .then(async res => {
-            setUser(res.data)
             if (!res.data.lastSynced) {
                 setSyncing(true)
                 try {
                     await axiosInstance.post('/api/sync')
+                    setUser(res.data)
                     setRefreshKey(prev => prev + 1)
                 } catch (error) {
                     console.error('Auto-sync failed:', error)
+                    setUser(res.data)
                 } finally {
                     setSyncing(false)
                 }
+            } else {
+                setUser(res.data)
             }
         })
         .catch(() => navigate('/'))
@@ -49,20 +52,25 @@ export default function Dashboard() {
     }
   }
 
-  if (!user) {
+  if (!user || syncing) {
     return (
-      <div className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: '#0d0d0d' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-4 h-4 border-2 border-t-transparent animate-spin"
-            style={{ borderColor: '#FFE500', borderTopColor: 'transparent' }} />
-          <span className="font-mono text-sm" style={{ color: '#888888' }}>
-            LOADING...
-          </span>
+        <div className="min-h-screen flex items-center justify-center"
+            style={{ backgroundColor: '#0d0d0d' }}>
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-4 h-4 border-2 border-t-transparent animate-spin"
+                    style={{ borderColor: '#FFE500', borderTopColor: 'transparent' }} />
+                <span className="font-mono text-sm" style={{ color: '#888888' }}>
+                    {syncing ? 'SYNCING YOUR GITHUB DATA...' : 'LOADING...'}
+                </span>
+                {syncing && (
+                    <span className="font-mono text-xs" style={{ color: '#444444' }}>
+                        THIS ONLY HAPPENS ONCE
+                    </span>
+                )}
+            </div>
         </div>
-      </div>
     )
-  }
+}
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#0d0d0d', color: '#FFFFFF' }}>
