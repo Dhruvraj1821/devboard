@@ -9,6 +9,7 @@ export default function ContributionHeatmap({refreshKey}) {
     const [totalContributions, setTotalContributions] = useState(0)
 
     useEffect(() => {
+        setError(null)  
         axiosInstance.get('/api/stats/calendar')
             .then(res => {
                 const transformed = res.data.map(day => ({

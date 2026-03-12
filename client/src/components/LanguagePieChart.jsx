@@ -33,6 +33,7 @@ export default function LanguagePieChart({refreshKey}) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
+        setError(null)
         axiosInstance.get('/api/stats/languages')
             .then(res => {
                 setLanguages(res.data)

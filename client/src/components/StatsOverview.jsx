@@ -37,6 +37,7 @@ export default function StatsOverview({refreshKey}) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
+        setError(null)
         axiosInstance.get('/api/stats/overview')
             .then(res => {
                 setStats(res.data)

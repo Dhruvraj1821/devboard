@@ -36,6 +36,7 @@ export default function CommitTrendChart({refreshKey}) {
 
     useEffect(() => {
         setLoading(true)
+        setError(null)
         axiosInstance.get(`/api/stats/trends?period=${period}`)
             .then(res => {
                 // Format dates for display on X axis

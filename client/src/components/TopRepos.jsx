@@ -85,6 +85,7 @@ export default function TopRepos({refreshKey}) {
     const [languageFilter, setLanguageFilter] = useState('ALL')
 
     useEffect(() => {
+        setError(null)
         axiosInstance.get('/api/stats/repos')
             .then(res => {
                 setRepos(res.data)
