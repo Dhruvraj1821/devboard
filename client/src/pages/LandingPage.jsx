@@ -1,4 +1,18 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+
 export default function LandingPage() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.startsWith('#token=')) {
+      const token = hash.substring(7)
+      localStorage.setItem('devboard_token', token)
+      navigate('/dashboard', { replace: true })
+    }
+  }, [navigate])
   const handleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/github`
 }

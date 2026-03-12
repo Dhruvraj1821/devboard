@@ -16,7 +16,7 @@ export const githubLogin = (req, res) => {
     });
     console.log('GitHub auth URL:', `https://github.com/login/oauth/authorize?${params}`);
 
-    res.redirect(`https://github.com/login/oauth/authorize?${params}`);
+    res.redirect(`${process.env.CLIENT_URL}/#token=${token}`)
 };
 
 export const githubCallback = async (req, res) => {
