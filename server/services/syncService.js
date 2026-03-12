@@ -38,8 +38,9 @@ export const syncUserStats = async (userId) => {
         .slice(0, 10);
 
     const stats = await GitHubStats.findOneAndUpdate(
-        { user: userId },  
-        {
+    { user: userId },
+    {
+        $set: {
             user: userId,
             totalCommits: contributions.totalCommits,
             totalPRs: contributions.totalPRs,
@@ -54,12 +55,13 @@ export const syncUserStats = async (userId) => {
             totalStars,
             topRepos,
             lastUpdated: new Date()
-        },
-        {
-            upsert: true,
-            returnDocument: 'after'
         }
-    );
+    },
+    {
+        upsert: true,
+        returnDocument: 'after'
+    }
+);
 
     
     await User.findByIdAndUpdate(userId, {
