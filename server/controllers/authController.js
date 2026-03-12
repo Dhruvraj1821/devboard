@@ -10,7 +10,7 @@ export const githubLogin = (req, res) => {
     stateStore.set(state, Date.now() + 600000);
     const params = new URLSearchParams({
         client_id: process.env.GITHUB_CLIENT_ID,
-        redirect_uri: 'http://localhost:5000/api/auth/github/callback',
+        redirect_uri: process.env.GITHUB_CALLBACK_URL || 'http://localhost:5000/api/auth/github/callback',
         scope: 'read:user user:email',
         state  // ← was missing, this is why GitHub never sent it back
     });
