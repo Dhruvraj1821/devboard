@@ -15,9 +15,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     axiosInstance.get('/api/auth/me')
-      .then(res => setUser(res.data))
-      .catch(() => navigate('/'))
-  }, [navigate])
+        .then(async res => {
+            setUser(res.data)
+            if (!res.data.lastSynced) {
+                setSyncing(true)
+                try {
+                    await axiosInstance.post('/api/sync')
+                    setRefreshKey(prev => prev + 1)
+                } catch (error) {
+                    console.error('Auto-sync failed:', error)
+                } finally {
+                    setSyncing(false)
+                }
+            }
+        })
+        .catch(() => navigate('/'))
+}, [navigate])
 
   const handleLogout = () => {
     localStorage.removeItem('devboard_token')
