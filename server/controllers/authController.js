@@ -12,11 +12,11 @@ export const githubLogin = (req, res) => {
         client_id: process.env.GITHUB_CLIENT_ID,
         redirect_uri: process.env.GITHUB_CALLBACK_URL || 'http://localhost:5000/api/auth/github/callback',
         scope: 'read:user user:email',
-        state  // ← was missing, this is why GitHub never sent it back
+        state
     });
     console.log('GitHub auth URL:', `https://github.com/login/oauth/authorize?${params}`);
 
-    res.redirect(`${process.env.CLIENT_URL}/#token=${token}`)
+    res.redirect(`https://github.com/login/oauth/authorize?${params}`)
 };
 
 export const githubCallback = async (req, res) => {
@@ -84,7 +84,7 @@ export const githubCallback = async (req, res) => {
             {expiresIn: '7d'}
         );
 
-        res.redirect(`${process.env.CLIENT_URL}/auth/success?token=${jwtToken}`);
+        res.redirect(`${process.env.CLIENT_URL}/#token=${token}`)
 
     } catch (error) {
         console.error('OAuth callback error: ', error.message);
